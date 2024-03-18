@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const app = express();
 dotenv.config()
 
-const port = process.env.SNOWFLAKE_PORT;
+const port = 8888;
 
 app.use(bodyParser.json());
 
