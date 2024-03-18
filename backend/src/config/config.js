@@ -1,10 +1,10 @@
 const options = {
-    account: 'UKBSCDI-AT89293',
-    username: 'MEDHA',
-    database: 'SNOWFLAKE_SAMPLE_DATA',
-    schema: 'TPCDS_SF10TCL',
-    warehouse: 'TRIAL',
-    password: 'Teqfocus!1',
+    account: process.env.SNOWFLAKE_ACCOUNT,
+    username: process.env.SNOWFLAKE_USERNAME,
+    database: process.env.SNOWFLAKE_DATABASE,
+    schema: process.env.SNOWFLAKE_SCHEMA,
+    warehouse: process.env.SNOWFLAKE_WAREHOUSE,
+    password: process.env.SNOWFLAKE_PASSWORD,
 };
 
 // 4.2.3 create the connection to the Snowflake account
