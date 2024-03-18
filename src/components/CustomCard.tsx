@@ -19,30 +19,34 @@ interface CustomCardProps {
 
 export default function CustomCard({ imageSrc, heading, value, backgroundColor, imageAlt }: Readonly<CustomCardProps>) {
     return (
-        <Card sx={{ maxWidth: 345 }}>
-            <CardHeader
-                action={
-                    <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                    </IconButton>
-                }
+        <Box>
+            <Card elevation={0} sx={{ maxWidth: 345, borderRadius: 5 }}>
+                <CardHeader
+                    action={
+                        <IconButton aria-label="settings">
+                            <MoreVertIcon />
+                        </IconButton>
+                    }
 
-            />
-            <CardMedia sx={{ px: 2 }}>
-                <Box sx={{ backgroundImage: backgroundColor, padding: 3, borderRadius: 5 }} >
-                    <Image alt={imageAlt} src={imageSrc} />
+                />
+                <Box p={1} >
+                    <CardMedia sx={{ px: 2 }}>
+                        <Box sx={{ backgroundImage: backgroundColor, padding: 3, borderRadius: 5 }} >
+                            <Image alt={imageAlt} width={65} src={imageSrc} />
+                        </Box>
+                    </CardMedia>
+                    <CardContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+                            <Typography variant="body2" color="text.secondary">
+                                {heading}
+                            </Typography>
+                            <Typography variant="h5" >
+                                {value}
+                            </Typography>
+                        </Box>
+                    </CardContent>
                 </Box>
-            </CardMedia>
-            <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-                    <Typography variant="body2" color="text.secondary">
-                        {heading}
-                    </Typography>
-                    <Typography variant="h5" >
-                        {value}
-                    </Typography>
-                </Box>
-            </CardContent>
-        </Card>
+            </Card>
+        </Box>
     );
 }

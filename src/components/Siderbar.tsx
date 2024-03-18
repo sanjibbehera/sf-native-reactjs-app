@@ -1,40 +1,69 @@
 // components/Sidebar.tsx
-import { CalendarMonth, Logout, MedicalServices, Person3, SupportAgent } from '@mui/icons-material';
+import { Logout } from '@mui/icons-material';
 import { Avatar, Box, CssBaseline, Drawer, List, ListItem } from '@mui/material';
 import Image from 'next/image';
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import CompanyLogo from '../../public/Logo.png';
+import AppointmentIcon from '../styles/icons/appointment-icon.png';
+import HospitalIcon from '../styles/icons/hospital-icon.png';
+import PatientActive from '../styles/icons/patient-active.png';
+import PatientInactive from '../styles/icons/patient-inactive.png';
+import SupportIcon from '../styles/icons/support-icon.png';
 import CustomListItem from './CustomListItem';
 import HomeIcon from './Icons/Home';
 const SideMenuItem = [
     {
         key: 'home',
         title: 'Home',
-        icon: <HomeIcon color={'#00B94A'} />
+        activeIcon: <HomeIcon color={'#00B94A'} />,
+        defaultIcon: <HomeIcon color={'#A6A6A6'} />,
+        routeName: '/',
     },
     {
         key: 'hospital',
         title: 'Hospital',
-        icon: <MedicalServices sx={{ color: "#B0B0B0", fontSize: 40 }} />
+        defaultIcon: <Image alt='hospital' width={40} src={HospitalIcon} />,
+        routeName: '/hospital',
     },
     {
         key: 'patients',
         title: 'Patients',
-        icon: <Person3 sx={{ color: "#B0B0B0", fontSize: 40 }} />
+        defaultIcon: <Image alt='patient' width={40} src={PatientInactive} />,
+        activeIcon: <Image alt='activepatient' width={40} src={PatientActive} />,
+        routeName: '/patients',
     },
     {
         key: 'appointments',
         title: 'Appointments',
-        icon: <CalendarMonth sx={{ color: "#B0B0B0", fontSize: 40 }} />
+        defaultIcon: <Image alt='appointments' width={40} src={AppointmentIcon} />,
+        routeName: '/appointments',
     },
     {
         key: 'support',
         title: 'Support',
-        icon: <SupportAgent sx={{ color: "#B0B0B0", fontSize: 40 }} />
+        defaultIcon: <Image alt='support' width={40} src={SupportIcon} />,
+        routeName: '/support',
     }
 ]
 
 const Sidebar: React.FC = () => {
+    const route = useRouter()
+    const [activeRoute, setActiveRoute] = useState('');
+    console.log('sd', route)
+    useEffect(() => {
+        if (route.pathname === '/') {
+            setActiveRoute('/')
+        } else if (route.pathname.includes('/patients')) {
+            setActiveRoute('/patients')
+        } else if (route.pathname === '/hospital') {
+            setActiveRoute('/hospital')
+        } else if (route.pathname === '/appointments') {
+            setActiveRoute('appointments')
+        } else if (route.pathname === '/support') {
+            setActiveRoute('/support')
+        }
+    }, []);
     return (
         <>
             <CssBaseline />
@@ -52,9 +81,10 @@ const Sidebar: React.FC = () => {
                     {SideMenuItem.map((item, index) => (
                         <CustomListItem
                             key={item.key}
+                            onClick={() => route.push(item.routeName)}
                             title={item.title}>
-                            {item.icon}
-                            {index === 0 && <Box sx={{ backgroundColor: '#035F22', width: 30, height: 3, borderRadius: 10 }} width={30} ></Box>}
+                            {activeRoute !== item.routeName ? item.defaultIcon : item.activeIcon}
+                            {activeRoute === item.routeName && <Box sx={{ backgroundColor: '#035F22', width: 30, height: 3, borderRadius: 10 }} width={30} ></Box>}
                         </CustomListItem>
                     ))}
 
