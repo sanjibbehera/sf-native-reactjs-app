@@ -25,3 +25,11 @@ export const fetchPatientsByDivision = async () => {
         return null
     }
 }
+export const fetchHospitals = async () => {
+    const result = await axios.get(`${API_BASE_URL}/hospitals`)
+    if (result !== null) {
+        return result.data
+    } else {
+        return null
+    }
+}

@@ -14,7 +14,7 @@ import StaffIcon from '../../public/Nurse.png';
 import DoctorIcon from '../../public/doctor.png';
 import EmergencyIcon from '../../public/emergency.png';
 import PatientIcon from '../../public/patient.png';
-import { fetchHospitalInfo, fetchMonthlyHospitalVisitCount, fetchPatientsByDivision } from './api/dashboard';
+import { fetchHospitalInfo, fetchHospitals, fetchMonthlyHospitalVisitCount, fetchPatientsByDivision } from './api/dashboard';
 
 
 function createData(
@@ -39,6 +39,7 @@ export default function Home() {
 
   const [cardItems, setCardItems]: any[] = useState([])
   const [addmitted, setAddmitted] = useState([]);
+  const [hospital, setHospitals] = useState([]);
   const [patientByDiv, setPatientByDiv] = useState([]);
   useEffect(() => {
     fetchHospitalInfo().then((data) => {
@@ -61,6 +62,11 @@ export default function Home() {
     fetchPatientsByDivision().then((data) => {
       setPatientByDiv(data)
     }).catch((err) => { console.log(err) });
+    fetchHospitals().then((data) => {
+      setHospitals(data)
+    }
+    ).catch((err) => { console.log(err) }
+    )
   }, [])
 
   // Generate random data for the Area Chart
@@ -80,7 +86,7 @@ export default function Home() {
       categories: Array.from({ length: 12 }, (_, i) => `Month ${i + 1}`),
     },
   };
-  console.log("addmitted", patientByDiv);
+  console.log("addmitted", hospital);
 
   return (
     <Layout>
