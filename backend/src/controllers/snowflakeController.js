@@ -19,6 +19,7 @@ const hospitals = async (request, response) => {
                 rows.forEach(function (row) {
                     const hospital = {
                         id: row.CC_CALL_CENTER_ID,
+                        hospital_name: row.CC_STREET_NAME,
                         hospital_branch: row.CC_NAME,
                         patients: row.CC_MANAGER,
                         emc:row.CC_MKT_ID,
