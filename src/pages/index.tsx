@@ -1,9 +1,9 @@
 import CustomCard from "@/components/CustomCard";
 import Layout from "@/components/Layout";
-import { Box, Card, CardContent, CardHeader, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Box, Card, CardContent, CardHeader, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import dynamic from "next/dynamic";
-import Image from "next/image";
-import MapImage from "../static/img/map.png";
+// import Image from "next/image";
+// import MapImage from "../static/img/map.png";
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 const geoUrl =
   "https://raw.githubusercontent.com/deldersveld/topojson/master/continents/south-america.json";
@@ -76,113 +76,152 @@ export default function Home() {
           </Typography>
         </Box>
       </Box>
-      <Box >
-        <Stack spacing={{ xs: 1, sm: 2 }} direction="row" useFlexGap flexWrap={"wrap"} >
+      <Box>
+        <Grid container spacing={2}>
           {cardData.map((card, index) => (
-            <Box key={index} flexGrow={2}>
+            <Grid item key={index}>
               <CustomCard
                 backgroundColor={card.backgroundColor}
                 imageAlt={card.imageAlt}
                 heading={card.heading}
                 value={card.value}
                 imageSrc={card.imageSrc} />
-            </Box>
+            </Grid>
           ))}
-          <Box sx={{ display: "flex", width: "40%", flexDirection: "column", border: "1px solid lightgrey", borderRadius: 2 }}>
-            <Typography p={1} variant="h6">Branch Location</Typography>
-            <Image
-              alt="map location"
-              src={MapImage}
-              style={{ width: "100%", height: "250px" }}
-            />
-          </Box>
-          <Card elevation={0} sx={{ borderRadius: 5, width: '59%' }}>
-            <CardContent>
-              <Typography variant="h6" component="div">
-                Average Patients Admitted Graph
-              </Typography>
-              <ReactApexChart
-                type="area"
-                series={areaChartData || []}
-                options={areaChartOptions || []}
-                height={300}
+          <Grid item md={5}>
+            <TableContainer elevation={0} sx={{ borderRadius: 5, p: 1.2 }} component={Paper}>
+              <Typography variant="h5" p={1}>Branch Location</Typography>
+              <Table size="small" aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Dessert (100g serving)</TableCell>
+                    <TableCell align="right">Calories</TableCell>
+                    <TableCell align="right">Fat&nbsp;(g)</TableCell>
+                    <TableCell align="right">Carbs&nbsp;(g)</TableCell>
+                    <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row) => (
+                    <TableRow
+                      key={row.name}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {row.name}
+                      </TableCell>
+                      <TableCell align="right">{row.calories}</TableCell>
+                      <TableCell align="right">{row.fat}</TableCell>
+                      <TableCell align="right">{row.carbs}</TableCell>
+                      <TableCell align="right">{row.protein}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
 
+            {/* <Box sx={{ display: "flex", flexDirection: "column", border: "1px solid lightgrey", borderRadius: 2 }}>
+              <Typography p={1} variant="h6">Branch Location</Typography>
+              <Image
+                alt="map location"
+                src={MapImage}
+                style={{ width: "100%", height: "250px" }}
               />
-            </CardContent>
-          </Card>
-          <Card elevation={0} sx={{ borderRadius: 5, width: '39%' }}>
-            <CardHeader
-              title="Patients By Division"
-            />
-            <CardContent>
-              <TableContainer>
-                <Table aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Dessert (100g serving)</TableCell>
-                      <TableCell align="right">Calories</TableCell>
-                      <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                      <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                      <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {rows.map((row) => (
-                      <TableRow
-                        key={row.name}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {row.name}
-                        </TableCell>
-                        <TableCell align="right">{row.calories}</TableCell>
-                        <TableCell align="right">{row.fat}</TableCell>
-                        <TableCell align="right">{row.carbs}</TableCell>
-                        <TableCell align="right">{row.protein}</TableCell>
+            </Box> */}
+          </Grid>
+          <Grid item wrap="wrap" >
+            <Card elevation={0} sx={{ borderRadius: 5, width: 700 }}>
+              <CardContent>
+                <Typography variant="h6" component="div">
+                  Average Patients Admitted Graph
+                </Typography>
+                <ReactApexChart
+                  type="area"
+                  series={areaChartData || []}
+                  options={areaChartOptions || []}
+                  height={260}
+
+                />
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item wrap="wrap" md={5}>
+            <Card elevation={0} sx={{ borderRadius: 5 }}>
+              <CardHeader
+                title="Patients By Division"
+              />
+              <CardContent>
+                <TableContainer>
+                  <Table size="small" aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Dessert (100g serving)</TableCell>
+                        <TableCell align="right">Calories</TableCell>
+                        <TableCell align="right">Fat&nbsp;(g)</TableCell>
+                        <TableCell align="right">Carbs&nbsp;(g)</TableCell>
+                        <TableCell align="right">Protein&nbsp;(g)</TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </Card>
-          <Card elevation={0} sx={{ borderRadius: 5, width: '100%' }}>
-            <CardHeader
-              title="Hospital Details"
-            />
-            <CardContent>
-              <TableContainer>
-                <Table aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Dessert (100g serving)</TableCell>
-                      <TableCell align="right">Calories</TableCell>
-                      <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                      <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                      <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {rows.map((row) => (
-                      <TableRow
-                        key={row.name}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {row.name}
-                        </TableCell>
-                        <TableCell align="right">{row.calories}</TableCell>
-                        <TableCell align="right">{row.fat}</TableCell>
-                        <TableCell align="right">{row.carbs}</TableCell>
-                        <TableCell align="right">{row.protein}</TableCell>
+                    </TableHead>
+                    <TableBody>
+                      {rows.map((row) => (
+                        <TableRow
+                          key={row.name}
+                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                          <TableCell component="th" scope="row">
+                            {row.name}
+                          </TableCell>
+                          <TableCell align="right">{row.calories}</TableCell>
+                          <TableCell align="right">{row.fat}</TableCell>
+                          <TableCell align="right">{row.carbs}</TableCell>
+                          <TableCell align="right">{row.protein}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item wrap="wrap" md={12}>
+            <Card elevation={0} sx={{ borderRadius: 5, width: "96%", mb: 2 }}>
+              <CardHeader
+                title="Hospital Details"
+              />
+              <CardContent>
+                <TableContainer>
+                  <Table size="small" aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Dessert (100g serving)</TableCell>
+                        <TableCell align="right">Calories</TableCell>
+                        <TableCell align="right">Fat&nbsp;(g)</TableCell>
+                        <TableCell align="right">Carbs&nbsp;(g)</TableCell>
+                        <TableCell align="right">Protein&nbsp;(g)</TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </Card>
-        </Stack>
+                    </TableHead>
+                    <TableBody>
+                      {rows.map((row) => (
+                        <TableRow
+                          key={row.name}
+                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                          <TableCell component="th" scope="row">
+                            {row.name}
+                          </TableCell>
+                          <TableCell align="right">{row.calories}</TableCell>
+                          <TableCell align="right">{row.fat}</TableCell>
+                          <TableCell align="right">{row.carbs}</TableCell>
+                          <TableCell align="right">{row.protein}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       </Box>
     </Layout>
   );
