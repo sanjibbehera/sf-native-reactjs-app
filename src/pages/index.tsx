@@ -1,6 +1,6 @@
 import CustomCard from "@/components/CustomCard";
 import Layout from "@/components/Layout";
-import { Box, Card, CardContent, Stack, Typography } from '@mui/material';
+import { Box, Card, CardContent, CardHeader, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import MapImage from "../static/img/map.png";
@@ -13,6 +13,27 @@ import StaffIcon from '../../public/Nurse.png';
 import DoctorIcon from '../../public/doctor.png';
 import EmergencyIcon from '../../public/emergency.png';
 import PatientIcon from '../../public/patient.png';
+
+
+function createData(
+  name: string,
+  calories: number,
+  fat: number,
+  carbs: number,
+  protein: number,
+) {
+  return { name, calories, fat, carbs, protein };
+}
+
+const rows = [
+  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+  createData('Eclair', 262, 16.0, 24, 6.0),
+  createData('Cupcake', 305, 3.7, 67, 4.3),
+  createData('Gingerbread', 356, 16.0, 49, 3.9),
+];
+
+
 export default function Home() {
 
   // Generate random data for the Area Chart
@@ -58,7 +79,7 @@ export default function Home() {
       <Box >
         <Stack spacing={{ xs: 1, sm: 2 }} direction="row" useFlexGap flexWrap={"wrap"} >
           {cardData.map((card, index) => (
-            <Box key={index}>
+            <Box key={index} flexGrow={2}>
               <CustomCard
                 backgroundColor={card.backgroundColor}
                 imageAlt={card.imageAlt}
@@ -67,7 +88,7 @@ export default function Home() {
                 imageSrc={card.imageSrc} />
             </Box>
           ))}
-          <Box sx={{ display: "flex", flexGrow: 3, flexDirection: "column", border: "1px solid lightgrey", borderRadius: 2 }}>
+          <Box sx={{ display: "flex", width: "40%", flexDirection: "column", border: "1px solid lightgrey", borderRadius: 2 }}>
             <Typography p={1} variant="h6">Branch Location</Typography>
             <Image
               alt="map location"
@@ -75,23 +96,94 @@ export default function Home() {
               style={{ width: "100%", height: "250px" }}
             />
           </Box>
+          <Card elevation={0} sx={{ borderRadius: 5, width: '59%' }}>
+            <CardContent>
+              <Typography variant="h6" component="div">
+                Average Patients Admitted Graph
+              </Typography>
+              <ReactApexChart
+                type="area"
+                series={areaChartData || []}
+                options={areaChartOptions || []}
+                height={300}
+
+              />
+            </CardContent>
+          </Card>
+          <Card elevation={0} sx={{ borderRadius: 5, width: '39%' }}>
+            <CardHeader
+              title="Patients By Division"
+            />
+            <CardContent>
+              <TableContainer>
+                <Table aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Dessert (100g serving)</TableCell>
+                      <TableCell align="right">Calories</TableCell>
+                      <TableCell align="right">Fat&nbsp;(g)</TableCell>
+                      <TableCell align="right">Carbs&nbsp;(g)</TableCell>
+                      <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {rows.map((row) => (
+                      <TableRow
+                        key={row.name}
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {row.name}
+                        </TableCell>
+                        <TableCell align="right">{row.calories}</TableCell>
+                        <TableCell align="right">{row.fat}</TableCell>
+                        <TableCell align="right">{row.carbs}</TableCell>
+                        <TableCell align="right">{row.protein}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </CardContent>
+          </Card>
+          <Card elevation={0} sx={{ borderRadius: 5, width: '100%' }}>
+            <CardHeader
+              title="Hospital Details"
+            />
+            <CardContent>
+              <TableContainer>
+                <Table aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Dessert (100g serving)</TableCell>
+                      <TableCell align="right">Calories</TableCell>
+                      <TableCell align="right">Fat&nbsp;(g)</TableCell>
+                      <TableCell align="right">Carbs&nbsp;(g)</TableCell>
+                      <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {rows.map((row) => (
+                      <TableRow
+                        key={row.name}
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {row.name}
+                        </TableCell>
+                        <TableCell align="right">{row.calories}</TableCell>
+                        <TableCell align="right">{row.fat}</TableCell>
+                        <TableCell align="right">{row.carbs}</TableCell>
+                        <TableCell align="right">{row.protein}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </CardContent>
+          </Card>
         </Stack>
       </Box>
-      <Box mt={1} >
-        <Card>
-          <CardContent>
-            <Typography variant="h6" component="div">
-              Average Patients Admitted Graph
-            </Typography>
-            <ReactApexChart
-              type="area"
-              series={areaChartData || []}
-              options={areaChartOptions || []}
-              height={300}
-            />
-          </CardContent>
-        </Card>
-      </Box>
-    </Layout >
+    </Layout>
   );
 }
