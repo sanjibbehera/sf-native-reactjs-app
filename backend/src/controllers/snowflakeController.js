@@ -1,7 +1,6 @@
 "use strict";
 const connection = require('../config/config.js');
 const { genderCountsByMonth } = require('../data/chart.js');
-const fs = require('fs');
 
 const hospitals = async (request, response) => {
     let data = {};
@@ -184,7 +183,6 @@ const getMonthlyHospitalVisitCount = async (request, response) => {
     let status = 200;
 
     try {
-        // Use the imported data directly
         data = genderCountsByMonth;
         return response.json(data);
     } catch (error) {
