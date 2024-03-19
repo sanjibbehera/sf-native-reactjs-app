@@ -9,42 +9,75 @@ const geoUrl =
   "https://raw.githubusercontent.com/deldersveld/topojson/master/continents/south-america.json";
 
 import SunIcon from "@/components/Icons/Sun";
+import { useEffect, useState } from "react";
 import StaffIcon from '../../public/Nurse.png';
 import DoctorIcon from '../../public/doctor.png';
 import EmergencyIcon from '../../public/emergency.png';
 import PatientIcon from '../../public/patient.png';
+import { fetchHospitalInfo, fetchHospitals, fetchMonthlyHospitalVisitCount, fetchPatientsByDivision } from './api/dashboard';
 
 
 function createData(
   name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
+  calories: string,
 ) {
-  return { name, calories, fat, carbs, protein };
+  return { name, calories };
 }
 
 const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
+  createData('City Hospital,Malbar hill', '20,axc road,Malbar lane,Malbar hill,mumbai',),
+  createData('City Hospital,Bandstand', '30,Atif Colony,lambat Nagar,Bandstand,mumbai'),
+  createData('City Hospital,Mohamd Ali Petrolpump', '54,Kamgar square,8wqe building,Mohamd Ali Petrolpump,mumbai'),
+  createData('City Hospital,xyas lane,Raji Nagar', '213,qwe Lane,xyas lane,Raji Nagar,mumbai'),
+  createData('City Hospital,Jaripatka', '1032,yud Mall,SXD lane,Jaripatka,mumbai'),
 ];
 
 
 export default function Home() {
 
+
+
+  const [cardItems, setCardItems]: any[] = useState([])
+  const [addmitted, setAddmitted] = useState([]);
+  const [hospital, setHospitals] = useState([]);
+  const [patientByDiv, setPatientByDiv] = useState([]);
+  useEffect(() => {
+    fetchHospitalInfo().then((data) => {
+      const cardData = [
+        { heading: 'Total Patients', imageAlt: 'patientIcon', imageSrc: PatientIcon, value: `${data[0].hospitals}`, backgroundColor: "linear-gradient(to right, #C6E1FF , #B0D6FF)" },
+        { heading: 'Emergency Calls', imageAlt: 'EmergencyIcon', imageSrc: EmergencyIcon, value: data[0].emergencies, backgroundColor: "linear-gradient(to right, #FFC6D0 , #FFC0C0)" },
+        { heading: 'Staff', imageAlt: 'StaffIcon', value: data[0].staff, imageSrc: StaffIcon, backgroundColor: "linear-gradient(to right, #B5FFD7 , #ACFFBE)" },
+        { heading: 'Doctors', imageAlt: 'DoctorIcon', value: data[0].doctors, imageSrc: DoctorIcon, backgroundColor: "linear-gradient(to right, #DEFFF1 , #C0FFF0)" },
+      ];
+      setCardItems(cardData)
+    }).catch((err) => {
+      console.log(err)
+    });
+    fetchMonthlyHospitalVisitCount().then((data) => {
+      setAddmitted(data)
+    }
+    ).catch((err) => {
+      console.log(err)
+    });
+    fetchPatientsByDivision().then((data) => {
+      setPatientByDiv(data)
+    }).catch((err) => { console.log(err) });
+    fetchHospitals().then((data) => {
+      setHospitals(data)
+    }
+    ).catch((err) => { console.log(err) }
+    )
+  }, [])
+
   // Generate random data for the Area Chart
-  const generateRandomData = (length: number) => {
-    return Array.from({ length }, () => Math.floor(Math.random() * 100));
+  const generateRandomData = (length: number, values: number[]) => {
+    return Array.from({ length }, (_, index) => values[index % values.length]);
   };
 
   // Data for the Area Chart
   const areaChartData = [
-    { name: 'Male', data: generateRandomData(12) }, // 12 months
-    { name: 'Female', data: generateRandomData(12) },
+    { name: 'Male', data: generateRandomData(addmitted.length, addmitted.map(data => data?.male)) }, // 12 months
+    { name: 'Female', data: generateRandomData(addmitted.length, addmitted.map(data => data?.female)) },
   ];
 
   // ApexChart options
@@ -53,13 +86,7 @@ export default function Home() {
       categories: Array.from({ length: 12 }, (_, i) => `Month ${i + 1}`),
     },
   };
-
-  const cardData = [
-    { heading: 'Total Patients', imageAlt: 'patientIcon', imageSrc: PatientIcon, value: '4,000', backgroundColor: "linear-gradient(to right, #C6E1FF , #B0D6FF)" },
-    { heading: 'Emergency Calls', imageAlt: 'EmergencyIcon', imageSrc: EmergencyIcon, value: '1,200', backgroundColor: "linear-gradient(to right, #FFC6D0 , #FFC0C0)" },
-    { heading: 'Staff', imageAlt: 'StaffIcon', value: '3,000', imageSrc: StaffIcon, backgroundColor: "linear-gradient(to right, #B5FFD7 , #ACFFBE)" },
-    { heading: 'Doctors', imageAlt: 'DoctorIcon', value: '500', imageSrc: DoctorIcon, backgroundColor: "linear-gradient(to right, #DEFFF1 , #C0FFF0)" },
-  ];
+  console.log("addmitted", hospital);
 
   return (
     <Layout>
@@ -78,7 +105,7 @@ export default function Home() {
       </Box>
       <Box>
         <Grid container spacing={2}>
-          {cardData.map((card, index) => (
+          {cardItems.map((card: any, index: number) => (
             <Grid item key={index}>
               <CustomCard
                 backgroundColor={card.backgroundColor}
@@ -89,19 +116,16 @@ export default function Home() {
             </Grid>
           ))}
           <Grid item md={5}>
-            <TableContainer elevation={0} sx={{ borderRadius: 5, p: 1.2 }} component={Paper}>
+            <TableContainer elevation={0} sx={{ borderRadius: 5, p: 1.2, maxHeight: 290 }} component={Paper}>
               <Typography variant="h5" p={1}>Branch Location</Typography>
               <Table size="small" aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Dessert (100g serving)</TableCell>
-                    <TableCell align="right">Calories</TableCell>
-                    <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                    <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                    <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                    <TableCell>Branch Name</TableCell>
+                    <TableCell align="right">Branch Location</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody sx={{ overflow: "scroll" }} >
                   {rows.map((row) => (
                     <TableRow
                       key={row.name}
@@ -111,9 +135,6 @@ export default function Home() {
                         {row.name}
                       </TableCell>
                       <TableCell align="right">{row.calories}</TableCell>
-                      <TableCell align="right">{row.fat}</TableCell>
-                      <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -151,30 +172,26 @@ export default function Home() {
                 title="Patients By Division"
               />
               <CardContent>
-                <TableContainer>
-                  <Table size="small" aria-label="simple table">
+                <TableContainer sx={{ maxHeight: 243 }}>
+                  <Table size="small">
                     <TableHead>
                       <TableRow>
-                        <TableCell>Dessert (100g serving)</TableCell>
-                        <TableCell align="right">Calories</TableCell>
-                        <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                        <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                        <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                        <TableCell><b>Division</b></TableCell>
+                        <TableCell ><b>In-Patients</b></TableCell>
+                        <TableCell ><b>Out-Patients</b></TableCell>
                       </TableRow>
                     </TableHead>
-                    <TableBody>
-                      {rows.map((row) => (
+                    <TableBody sx={{ overflow: "scroll" }} >
+                      {patientByDiv.map((patientRole: any, i) => (
                         <TableRow
-                          key={row.name}
+                          key={i}
                           sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                           <TableCell component="th" scope="row">
-                            {row.name}
+                            {patientRole.divison}
                           </TableCell>
-                          <TableCell align="right">{row.calories}</TableCell>
-                          <TableCell align="right">{row.fat}</TableCell>
-                          <TableCell align="right">{row.carbs}</TableCell>
-                          <TableCell align="right">{row.protein}</TableCell>
+                          <TableCell align="right">{patientRole.inpatient}</TableCell>
+                          <TableCell align="right">{patientRole.outpatient}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
