@@ -608,6 +608,11 @@
   resolved "https://registry.npmjs.org/@types/scheduler/-/scheduler-0.16.8.tgz"
   integrity sha512-WZLiwShhwLRmeV6zH+GkbOFT6Z6VklCItrDioxUnv+u4Ll+8vKeFySoFyK/0ctcRpOmwAicELfmys1sDc/Rw+A==
 
+"@types/tableau@^2.2.8":
+  version "2.2.8"
+  resolved "https://registry.npmjs.org/@types/tableau/-/tableau-2.2.8.tgz"
+  integrity sha512-idozMioHnzXpBUb90ow2EM4f6nV0GTUQurBfqIQthWFqxwmyL8Ov2ao/pVrrJSKILPEVP5keTRpRpLJJjG0jFw==
+
 "@typescript-eslint/parser@^5.4.2 || ^6.0.0":
   version "6.21.0"
   resolved "https://registry.npmjs.org/@typescript-eslint/parser/-/parser-6.21.0.tgz"
@@ -3224,6 +3229,11 @@ svg.select.js@^3.0.1:
   integrity sha512-h5IS/hKkuVCbKSieR9uQCj9w+zLHoPh+ce19bBYyqF53g6mnPB8sAtIbe1s9dh2S2fCmYX2xel1Ln3PJBbK4kw==
   dependencies:
     svg.js "^2.6.5"
+
+tableau@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.npmjs.org/tableau/-/tableau-0.0.3.tgz"
+  integrity sha512-Vus4XlLBBGimiqDYgVXzeV7/sEruzE2EYBoboZyyd++DkZvYgQ1vpCD5M+bEN2bcE/c9ePTD7gzAHNUq/cbdug==
 
 tapable@^2.2.0:
   version "2.2.1"
