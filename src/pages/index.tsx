@@ -340,7 +340,7 @@ export default function Home() {
             </Card>
           </Grid>
           <Grid item wrap="wrap" md={12}>
-            <Card elevation={0} sx={{ borderRadius: 5, width: "96%", mb: 2 }}>
+            <Card elevation={0} sx={{ borderRadius: 5, width: "93%", mb: 2 }}>
               <CardHeader title="Hospital Details" />
               <CardContent>
                 <TableContainer>
